@@ -7,7 +7,7 @@
 /cobertura.ser
 .DS_Store
 /target/
-
+/plugins/
 ### Eclipse files
 .project
 .classpath

@@ -2,7 +2,12 @@ package org.grails.samples
 
 class ClinicController {
 
-	def index() {}
+	def petclinicService
+
+	def index() {
+		[add: request.session.getAttribute("add"),
+		petname: petclinicService.getRegion().get(request.session.id)]
+	}
 
 	def tutorial() {}
 

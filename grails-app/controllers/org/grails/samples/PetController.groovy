@@ -9,8 +9,13 @@ class PetController {
 			return [pet: new Pet(owner: Owner.get(params.owner?.id)), types: PetType.list()]
 		}
 
+		request.session.setAttribute("add", new Date())
+		
 		def pet = petclinicService.createPet(params.pet_name, params.pet?.birthDate,
 			(params.pet?.type?.id ?: 0) as Long, (params.pet_owner_id ?: 0) as Long)
+
+
+		petclinicService.getRegion().put(request.session.id, pet.name)
 
 		if (pet.hasErrors()) {
 			return [pet: pet, types: PetType.list()]

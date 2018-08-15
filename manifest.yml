@@ -1,0 +1,14 @@
+---
+applications:
+- name: pc-g2
+  memory: 2G
+  instances: 1
+  #buildpack: https://github.com/rhardt-pivotal/java-buildpack
+  path: target/pc-g2-0.1.war
+  env:
+    JBP_CONFIG_DEBUG: '{enabled: true, suspend: false}'
+    #JBP_CONFIG_TOMCAT: '{geode_store: {repository_root: "{default.repository.root}/geode-store"}}'
+    #JBP_CONFIG_TOMCAT: '{geode_store: {repository_root: "https://s3.amazonaws.com/geode-store-rhardt"}}'
+    JBP_CONFIG_LOGGING: '{default_log_level: INFO}'
+  services:
+  - rob-session-replication

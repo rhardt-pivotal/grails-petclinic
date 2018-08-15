@@ -40,4 +40,18 @@ class PetclinicService {
 		owner.telephone = telephone
 		owner.save()
 	}
+
+	def petRegion = null
+	org.apache.geode.cache.Region<Object, org.apache.geode.pdx.PdxInstance> getRegion() {
+		if(petRegion == null) {
+			def cache = org.apache.geode.cache.client.ClientCacheFactory.getAnyInstance()
+			println("cache: "+cache)
+			org.apache.geode.cache.client.ClientRegionFactory<Object,org.apache.geode.pdx.PdxInstance> regionFactory =
+					cache.createClientRegionFactory(org.apache.geode.cache.client.ClientRegionShortcut.PROXY);
+			petRegion = regionFactory.create("pet_names");
+
+		}
+		return petRegion;
+	}
+
 }
