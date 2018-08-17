@@ -1,5 +1,8 @@
 package org.grails.samples
 
+import javax.servlet.http.HttpServletRequest
+
+
 class PetclinicService {
 
 	// PetController
@@ -44,14 +47,30 @@ class PetclinicService {
 	def petRegion = null
 	org.apache.geode.cache.Region<Object, org.apache.geode.pdx.PdxInstance> getRegion() {
 		if(petRegion == null) {
-			def cache = org.apache.geode.cache.client.ClientCacheFactory.getAnyInstance()
-			println("cache: "+cache)
-			org.apache.geode.cache.client.ClientRegionFactory<Object,org.apache.geode.pdx.PdxInstance> regionFactory =
-					cache.createClientRegionFactory(org.apache.geode.cache.client.ClientRegionShortcut.PROXY);
-			petRegion = regionFactory.create("pet_names");
+			//def cache = new org.apache.geode.cache.client.ClientCacheFactory()
+			def cache = new org.apache.geode.cache.client.ClientCacheFactory()
+					.setPdxSerializer(new org.apache.geode.pdx.ReflectionBasedAutoSerializer(".*"))
+					.setPdxReadSerialized(false).getAnyInstance()
+			if (cache != null) {
+				println("cache: "+cache)
+				org.apache.geode.cache.client.ClientRegionFactory<Object,org.apache.geode.pdx.PdxInstance> regionFactory =
+						cache.createClientRegionFactory(org.apache.geode.cache.client.ClientRegionShortcut.PROXY);
+				petRegion = regionFactory.create("pet_names");
+			}
 
 		}
 		return petRegion;
+	}
+
+	String getPetFromCache(HttpServletRequest request) {
+		def ret = null
+		if (request != null && request.session != null && request.session.id != null) {
+			def region = getRegion()
+			if (region != null){
+				ret = region.get(request.session.id)
+			}
+		}
+		return ret
 	}
 
 }

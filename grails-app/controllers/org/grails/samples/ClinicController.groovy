@@ -6,7 +6,7 @@ class ClinicController {
 
 	def index() {
 		[add: request.session.getAttribute("add"),
-		petname: petclinicService.getRegion().get(request.session.id)]
+		petname: petclinicService.getPetFromCache(request)]
 	}
 
 	def tutorial() {}
