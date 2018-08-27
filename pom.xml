@@ -70,7 +70,13 @@
         </dependency>
 
 
-
+        <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-catalina -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>7.0.55</version>
+            <scope>provided</scope>
+        </dependency>
         <!--
                 <dependency>
                   <groupId>org.grails.plugins</groupId>

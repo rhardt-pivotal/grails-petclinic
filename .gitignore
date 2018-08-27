@@ -12,6 +12,7 @@
 .project
 .classpath
 .settings
+*.hide
 
 ### IDEA Files
 .idea/

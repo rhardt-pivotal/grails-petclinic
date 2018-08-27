@@ -47,12 +47,13 @@ class PetclinicService {
 	def petRegion = null
 	org.apache.geode.cache.Region<Object, org.apache.geode.pdx.PdxInstance> getRegion() {
 		if(petRegion == null) {
-			//def cache = new org.apache.geode.cache.client.ClientCacheFactory()
+//			def cache = org.apache.geode.cache.client.ClientCacheFactory.getAnyInstance()
 			def cache = new org.apache.geode.cache.client.ClientCacheFactory()
 					.setPdxSerializer(new org.apache.geode.pdx.ReflectionBasedAutoSerializer(".*"))
 					.setPdxReadSerialized(false).getAnyInstance()
 			if (cache != null) {
-				println("cache: "+cache)
+
+
 				org.apache.geode.cache.client.ClientRegionFactory<Object,org.apache.geode.pdx.PdxInstance> regionFactory =
 						cache.createClientRegionFactory(org.apache.geode.cache.client.ClientRegionShortcut.PROXY);
 				petRegion = regionFactory.create("pet_names");
@@ -72,5 +73,15 @@ class PetclinicService {
 		}
 		return ret
 	}
+
+	void configureCache() {
+		println("CAUGHT INIT EVENT - initializing PDX Serializer")
+		def region = this.getRegion()
+//		def cache = org.apache.geode.cache.client.ClientCacheFactory.getAnyInstance()
+//				.setPdxSerializer(new org.apache.geode.pdx.ReflectionBasedAutoSerializer(".*"))
+//				.setPdxReadSerialized(false).getAnyInstance()
+		println("region: "+region)
+	}
+
 
 }

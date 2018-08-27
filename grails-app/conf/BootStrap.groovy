@@ -1,11 +1,18 @@
 import org.grails.samples.Owner
 import org.grails.samples.PetType
+import org.grails.samples.PetclinicService
 import org.grails.samples.Speciality
 import org.grails.samples.Vet
 
 class BootStrap {
 
+	def petclinicService;
+
 	def init = { servletContext ->
+
+		println("BOOTSTRAP: "+petclinicService)
+		petclinicService.configureCache()
+
 		if (!Speciality.count()) {
 			def radiology = new Speciality(name: 'radiology').save(failOnError: true)
 			def surgery =   new Speciality(name: 'surgery').save(failOnError: true)
