@@ -9,6 +9,7 @@
 
     <h3>${add}</h3>
     <h3>${petname}</h3>
+  <h3>${petclass}</h3>
 
     <ul>
       <li><g:link controller="owner" action="find">Find owner</g:link></li>

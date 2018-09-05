@@ -10,12 +10,24 @@ class PetController {
 		}
 
 		request.session.setAttribute("add", new Date())
-		
+
 		def pet = petclinicService.createPet(params.pet_name, params.pet?.birthDate,
 			(params.pet?.type?.id ?: 0) as Long, (params.pet_owner_id ?: 0) as Long)
 
+		println("PET3: "+pet+" : "+pet.getClass().getName())
 
-		petclinicService.getRegion().put(request.session.id, pet.name)
+		def externalPet = new ExternalPet(
+				name: pet.name,
+				owner: pet.owner.firstName,
+				type: pet.type.name,
+				birthDate: pet.birthDate)
+
+		println("** EXTERNAL PET: "+externalPet)
+
+		request.session.setAttribute("external_pet", externalPet);
+
+		def r = petclinicService.getRegion()
+		r.put(request.session.id, externalPet)
 
 		if (pet.hasErrors()) {
 			return [pet: pet, types: PetType.list()]

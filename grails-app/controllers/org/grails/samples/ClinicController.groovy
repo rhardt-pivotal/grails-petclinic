@@ -5,8 +5,13 @@ class ClinicController {
 	def petclinicService
 
 	def index() {
-		[add: request.session.getAttribute("add"),
-		petname: petclinicService.getPetFromCache(request)]
+		def petname = petclinicService.getPetFromCache(request)
+		def petclass = petname ? petname.getClass().getName() : "no-class"
+		[
+				add: request.session.getAttribute("add"),
+				petname: petname ? petname.name : "not-found",
+				petclass: petclass
+		]
 	}
 
 	def tutorial() {}

@@ -13,7 +13,7 @@
 .classpath
 .settings
 *.hide
-
+manifest.yml
 ### IDEA Files
 .idea/
 *.iml

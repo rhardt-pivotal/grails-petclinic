@@ -9,7 +9,9 @@ class PetclinicService {
 
 	Pet createPet(String name, Date birthDate, long petTypeId, long ownerId) {
 		def pet = new Pet(name: name, birthDate: birthDate, type: PetType.load(petTypeId), owner: Owner.load(ownerId))
+		println("PET1: "+pet+" : "+pet.getClass().getName())
 		pet.save()
+		println("PET2: "+pet+" : "+pet.getClass().getName())
 		pet
 	}
 
@@ -45,25 +47,29 @@ class PetclinicService {
 	}
 
 	def petRegion = null
-	org.apache.geode.cache.Region<Object, org.apache.geode.pdx.PdxInstance> getRegion() {
+	def globalPdxCache = null
+	org.apache.geode.cache.Region<Object, org.apache.geode.pdx.PdxInstance> getRegion() {\
+
 		if(petRegion == null) {
 //			def cache = org.apache.geode.cache.client.ClientCacheFactory.getAnyInstance()
-			def cache = new org.apache.geode.cache.client.ClientCacheFactory()
-					.setPdxSerializer(new org.apache.geode.pdx.ReflectionBasedAutoSerializer(".*"))
-					.setPdxReadSerialized(false).getAnyInstance()
+			org.apache.geode.internal.cache.GemFireCacheImpl cache =
+					new org.apache.geode.cache.client.ClientCacheFactory().getAnyInstance()
 			if (cache != null) {
-
-
+				cache.getCacheConfig().setPdxSerializer(new org.apache.geode.pdx.ReflectionBasedAutoSerializer(".*"))
 				org.apache.geode.cache.client.ClientRegionFactory<Object,org.apache.geode.pdx.PdxInstance> regionFactory =
-						cache.createClientRegionFactory(org.apache.geode.cache.client.ClientRegionShortcut.PROXY);
+						cache.createClientRegionFactory(org.apache.geode.cache.client.ClientRegionShortcut.PROXY)
 				petRegion = regionFactory.create("pet_names");
 			}
+			else{
+				println("****** CACHE WAS NULL - NOT SET!!!")
+			}
+			println("cache: "+cache.getPdxSerializer().getProperties())
 
 		}
-		return petRegion;
+		return petRegion
 	}
 
-	String getPetFromCache(HttpServletRequest request) {
+	ExternalPet getPetFromCache(HttpServletRequest request) {
 		def ret = null
 		if (request != null && request.session != null && request.session.id != null) {
 			def region = getRegion()

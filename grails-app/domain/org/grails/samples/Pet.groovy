@@ -1,5 +1,6 @@
 package org.grails.samples
 
+
 /**
  * Simple domain object representing a pet.
  *
