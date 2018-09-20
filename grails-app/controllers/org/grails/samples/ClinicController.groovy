@@ -10,7 +10,9 @@ class ClinicController {
 		[
 				add: request.session.getAttribute("add"),
 				petname: petname ? petname.name : "not-found",
-				petclass: petclass
+				petclass: petclass,
+				xgc: request.session.getAttribute("xgc"),
+				cal: request.session.getAttribute("cal")
 		]
 	}
 

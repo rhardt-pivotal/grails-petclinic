@@ -1,5 +1,8 @@
 package org.grails.samples
 
+import org.apache.geode.cache.GemFireCache
+import org.apache.geode.cache.client.ClientCacheFactory
+
 import javax.servlet.http.HttpServletRequest
 
 
@@ -48,14 +51,12 @@ class PetclinicService {
 
 	def petRegion = null
 	def globalPdxCache = null
-	org.apache.geode.cache.Region<Object, org.apache.geode.pdx.PdxInstance> getRegion() {\
+	org.apache.geode.cache.Region<Object, org.apache.geode.pdx.PdxInstance> getRegion() {
 
 		if(petRegion == null) {
-//			def cache = org.apache.geode.cache.client.ClientCacheFactory.getAnyInstance()
 			org.apache.geode.internal.cache.GemFireCacheImpl cache =
 					new org.apache.geode.cache.client.ClientCacheFactory().getAnyInstance()
 			if (cache != null) {
-				cache.getCacheConfig().setPdxSerializer(new org.apache.geode.pdx.ReflectionBasedAutoSerializer(".*"))
 				org.apache.geode.cache.client.ClientRegionFactory<Object,org.apache.geode.pdx.PdxInstance> regionFactory =
 						cache.createClientRegionFactory(org.apache.geode.cache.client.ClientRegionShortcut.PROXY)
 				petRegion = regionFactory.create("pet_names");
@@ -67,6 +68,10 @@ class PetclinicService {
 
 		}
 		return petRegion
+	}
+
+	GemFireCache getCache() {
+		return ClientCacheFactory.getAnyInstance();
 	}
 
 	ExternalPet getPetFromCache(HttpServletRequest request) {

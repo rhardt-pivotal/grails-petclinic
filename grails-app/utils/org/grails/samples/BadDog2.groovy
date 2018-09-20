@@ -1,6 +1,6 @@
 package org.grails.samples
 
-class ExternalPet implements Serializable{
+class BadDog2 {
     String name
     Date birthDate
     String type
